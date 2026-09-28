@@ -1,0 +1,13 @@
+{
+  "appId": "online.sscbusiness.fahrtenplan",
+  "appName": "Fahrtenplan",
+  "webDir": "www",
+  "server": {
+    "url": "https://ssc-business.online/fahrtenplan.html",
+    "cleartext": false,
+    "allowNavigation": ["ssc-business.online"]
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
