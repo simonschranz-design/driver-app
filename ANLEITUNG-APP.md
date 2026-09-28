@@ -1,6 +1,6 @@
 # Fahrtenplan als native Android-App
 
-Dieses Paket baut automatisch (über GitHub) eine installierbare
+Diese s Paket baut automatisch (über GitHub) eine installierbare
 Android-App, die deine bestehende Web-App (`https://ssc-business.online/fahrtenplan.html`)
 in einer echten App-Hülle lädt – mit App-Symbol und Hintergrund-GPS
 während der Fahrt (Standort wird in der Collection `driverLocations`
