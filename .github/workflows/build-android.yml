@@ -1,3 +1,4 @@
+name: Gradle ausführbar machen run: chmod +x android/gradlew
 name: Android-App bauen
 
 # Läuft automatisch bei jedem Push, und lässt sich zusätzlich manuell
