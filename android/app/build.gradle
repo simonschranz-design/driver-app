@@ -7,13 +7,19 @@ android {
         applicationId "online.sscbusiness.fahrtenplan"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "2.0"
+        versionCode 5
+        versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    // APK-Dateiname: fahrtenplanV<Hauptversion>.apk (z. B. fahrtenplanV3.apk bei versionName "3.0")
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "fahrtenplanV" + variant.versionName.tokenize('.')[0] + ".apk"
         }
     }
     // Feste Debug-Signatur (liegt im Repository): Ohne sie bekommt jeder GitHub-Build eine NEUE zufällige

@@ -52,6 +52,7 @@ public class TrackService extends Service {
     static final String ACTION_STOP = "online.sscbusiness.fahrtenplan.TRACK_STOP";
     private static final String CH_RUN = "fp_track_run";
     private static final String CH_PROBLEM = "fp_track_problem";
+    private static final String CH_NEWS = "fp_news";
     private static final int ID_RUN = 4711, ID_PROBLEM = 4712;
 
     static volatile boolean running = false;
@@ -161,6 +162,36 @@ public class TrackService extends Service {
         NotificationChannel pr = new NotificationChannel(CH_PROBLEM, "Probleme bei der Standort-Übertragung", NotificationManager.IMPORTANCE_HIGH);
         pr.setDescription("Warnung, wenn GPS aus ist, die Berechtigung fehlt oder die Anmeldung beendet wurde.");
         nm.createNotificationChannel(pr);
+        NotificationChannel nw = new NotificationChannel(CH_NEWS, "Aufträge und Auflieger", NotificationManager.IMPORTANCE_HIGH);
+        nw.setDescription("Neue oder geänderte Aufträge und Auflieger-Wechsel von der Disposition.");
+        nm.createNotificationChannel(nw);
+    }
+
+    /** Zeigt neue Hinweise der Disposition (aus der Server-Antwort) als Handy-Benachrichtigung – auch bei geschlossener App. */
+    private void showNews(String json) {
+        try {
+            if (json == null || json.isEmpty()) return;
+            ensureChannels(this);
+            if (Build.VERSION.SDK_INT >= 33 && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return;
+            NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (nm == null) return;
+            JSONArray a = new JSONArray(json);
+            for (int i = 0; i < a.length(); i++) {
+                JSONObject o = a.getJSONObject(i);
+                String id = o.optString("id", "n" + i);
+                Notification n = new NotificationCompat.Builder(this, CH_NEWS)
+                        .setSmallIcon(android.R.drawable.ic_dialog_info)
+                        .setContentTitle(o.optString("title", "Fahrtenplan"))
+                        .setContentText(o.optString("text", ""))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(o.optString("text", "")))
+                        .setAutoCancel(true)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                        .setContentIntent(openAppIntent(this))
+                        .build();
+                nm.notify(4800 + (Math.abs(id.hashCode()) % 100000), n);
+            }
+        } catch (Exception ignored) {}
     }
 
     private static PendingIntent openAppIntent(Context c) {
@@ -389,6 +420,7 @@ public class TrackService extends Service {
             if (code == 200) {
                 TrackStore.queueDrop(this, pts.length());
                 lastLive = now; lastUpload = now; lastSentMs = now; dirty = false;
+                showNews(TrackStore.lastNotify);
                 TrackStore.sp(this).edit().putLong("lastSentMs", now).apply();
                 updateRunNotification("Standort übertragen · " + new SimpleDateFormat("HH:mm", Locale.GERMANY).format(new Date(now)));
                 // weitere Punkte (grosse Rückstände nach Funkloch) gleich nachschieben

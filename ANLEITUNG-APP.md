@@ -1,7 +1,7 @@
 # Fahrtenplan als native Android-App
 
-Dieses  Paket baut automatisch (über GitHub) eine installierbare
-Android-App, die deine bestehende Web-App (`https://ssc-business.online/fahrtenplan.html`)
+Dieses Paket baut automatisch (über GitHub) eine installierbare
+Android-App, die deine bestehende Web-App (`https://ssc-business.com/index.php`)
 in einer echten App-Hülle lädt – mit App-Symbol und Hintergrund-GPS
 während der Fahrt (Standort wird in der Collection `driverLocations`
 gespeichert). Push-Benachrichtigungen kommen in einem zweiten Schritt
@@ -58,3 +58,32 @@ werden ergänzt, App-Symbol wird ausgetauscht). In dem Fall: neue Dateien
 hier ins gleiche GitHub-Repository hochladen (überschreiben), „Actions"
 läuft automatisch neu, neue APK herunterladen und Fahrern zum Update
 schicken.
+
+
+## Neu: Dokumente öffnen (Auftrags-Dokumente, "Meine Dokumente")
+
+Die App enthält jetzt ein kleines eigenes Plugin (`DocOpenerPlugin.java`), das Dokumente vom eigenen
+Server herunterlädt und mit der passenden Handy-App öffnet (PDF-Reader, Word, Excel, Galerie …).
+Das braucht **einen neuen App-Build**: geänderte Dateien (`android/app/src/main/java/...`) ins GitHub-
+Repository hochladen (überschreiben), "Actions" baut automatisch, neue `app-debug.apk` installieren.
+Bis dahin öffnet die alte App Dokumente ersatzweise über den Google-Dokument-Viewer im Handy-Browser.
+
+
+## Neu in Version 2.0: Nativer Standort-Dienst
+
+Das Tracking laeuft jetzt komplett in der App (eigener Dienst, `TrackService.java`) und nicht mehr im Browser-Teil:
+Es laeuft weiter, wenn die App weggewischt wird oder die Seite neu laedt, startet nach Handy-Neustart und App-Update
+von selbst, sendet auch im Stand alle 2 Minuten ein Lebenszeichen und meldet Probleme per Benachrichtigung
+(GPS aus, Berechtigung fehlt, abgemeldet). Die Positionen gehen an `track.php` auf dem Server.
+
+**Ins GitHub-Repository hochladen (ueberschreiben/neu):**
+- `android/app/build.gradle` (Version 2.0, Google-Standort-Bibliothek)
+- `android/app/src/main/AndroidManifest.xml` (Dienst, Neustart-Empfaenger, Boot-Berechtigung)
+- `android/app/src/main/java/online/sscbusiness/fahrtenplan/`: `MainActivity.java` (ersetzt die bisherige, registriert beide Plugins),
+  `NativeTrackPlugin.java`, `TrackService.java`, `TrackReceiver.java`, `TrackStore.java` (neu), `DocOpenerPlugin.java` (unveraendert)
+
+Danach baut GitHub Actions die neue `app-debug.apk`. **Jeder Fahrer muss sie einmal installieren** (einfach ueber die alte App
+installieren, nichts deinstallieren). Beim ersten Start fragt die App nach Standort («Immer zulassen»), Benachrichtigungen und
+der Akku-Ausnahme. Im Standorte-Tab zeigt die Spalte «Hinweise», wer noch die alte Version hat.
+
+Auf dem Server muss `track.php` neben `api.php` liegen (kommt mit dem Update-ZIP).

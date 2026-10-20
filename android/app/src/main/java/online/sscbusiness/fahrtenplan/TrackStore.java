@@ -103,6 +103,9 @@ final class TrackStore {
 
     // ---- Upload ----
     /** Ergebnis: HTTP-Code (200 = ok), -1 = kein Netz/Fehler. Verlängerten Token übernehmen. */
+    /** Von der letzten Antwort: neue Hinweise fürs Handy (JSON-Array als Text), sonst leer. */
+    static volatile String lastNotify = "";
+
     static int post(Context c, JSONObject body) {
         HttpURLConnection conn = null;
         try {
@@ -129,8 +132,12 @@ final class TrackStore {
                 String line;
                 while ((line = r.readLine()) != null) sb.append(line);
                 r.close();
+                lastNotify = "";
                 try {
-                    String nt = new JSONObject(sb.toString()).optString("_token", "");
+                    JSONObject ro = new JSONObject(sb.toString());
+                    org.json.JSONArray na = ro.optJSONArray("notify");
+                    if (na != null && na.length() > 0) lastNotify = na.toString();
+                    String nt = ro.optString("_token", "");
                     if (!nt.isEmpty()) sp(c).edit().putString("token", nt).apply();
                 } catch (Exception ignored) {}
             }
