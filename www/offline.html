@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fahrtenplan – keine Verbindung</title>
+<style>
+  html,body{height:100%;margin:0}
+  body{font:16px -apple-system,Roboto,sans-serif;background:#faf9f5;color:#141413;display:flex;align-items:center;justify-content:center;text-align:center;padding:1.2rem;box-sizing:border-box}
+  .box{max-width:22rem}
+  h1{font-size:1.35rem;margin:.2rem 0 .6rem}
+  p{margin:.4rem 0;color:#444}
+  .spin{width:2rem;height:2rem;border:3px solid #cdd8e4;border-top-color:#073b6b;border-radius:50%;margin:1rem auto;animation:r 1s linear infinite}
+  @keyframes r{to{transform:rotate(360deg)}}
+  button{font-size:1rem;padding:.75rem 1.5rem;border-radius:.5rem;border:0;background:#073b6b;color:#fff;margin-top:.8rem}
+  small{display:block;margin-top:1rem;color:#888;font-size:.78rem}
+</style></head>
+<body><div class="box">
+  <div style="font-size:2.4rem">📡</div>
+  <h1>Keine Verbindung zum Server</h1>
+  <p>Die App versucht es automatisch erneut, sobald Empfang da ist.</p>
+  <div class="spin" id="spin"></div>
+  <button id="retry">Jetzt erneut versuchen</button>
+  <small id="diag"></small>
+</div>
+<script>
+(function(){
+  var TARGET = 'https://ssc-business.com/index.php';
+  var tries = 0, busy = false;
+  function diag(msg){ document.getElementById('diag').textContent = msg; }
+  function go(){ location.replace(TARGET); }
+  function check(){
+    if(busy) return; busy = true; tries++;
+    var ctrl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+    var t = setTimeout(function(){ try{ ctrl && ctrl.abort(); }catch(e){} }, 8000);
+    fetch(TARGET, {mode:'no-cors', cache:'no-store', signal: ctrl ? ctrl.signal : undefined})
+      .then(function(){ clearTimeout(t); go(); },
+            function(e){ clearTimeout(t); busy = false; diag('Versuch '+tries+' · '+(navigator.onLine===false?'Gerät meldet: offline':'Server antwortet nicht')+' ('+(e&&e.name||'Fehler')+')'); });
+  }
+  document.getElementById('retry').addEventListener('click', function(){ go(); });
+  window.addEventListener('online', check);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) check(); });
+  setInterval(check, 5000); check();
+})();
+</script></body></html>

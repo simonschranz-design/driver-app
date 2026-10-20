@@ -3,9 +3,14 @@
   "appName": "Fahrtenplan",
   "webDir": "www",
   "server": {
-    "url": "https://ssc-business.online/fahrtenplan.html",
+    "url": "https://ssc-business.com/index.php",
     "cleartext": false,
-    "allowNavigation": ["ssc-business.online"]
+    "allowNavigation": [
+      "ssc-business.com",
+      "*.ssc-business.com",
+      "ssc-business.online"
+    ],
+    "errorPath": "offline.html"
   },
   "android": {
     "allowMixedContent": false
