@@ -6,8 +6,8 @@ name: Android-App bauen
 # Ergebnis (unten im Lauf bei "Artifacts"):
 #   - Fahrtenplan-Test-APK      → fahrtenplanV4-test.apk, direkt aufs Handy installierbar (App «Fahrtenplan Test»)
 #   - Fahrtenplan-PlayStore     → .aab-Datei zum Hochladen in die Google Play Console
-#                                 (nur wenn die 4 Secrets FP_UPLOAD_KEYSTORE_BASE64, FP_KEYSTORE_PASSWORD,
-#                                  FP_KEY_ALIAS, FP_KEY_PASSWORD unter Settings → Secrets → Actions hinterlegt sind)
+#                                 (nur wenn die Secrets FP_UPLOAD_KEYSTORE_BASE64 und FP_KEYSTORE_PASSWORD
+#                                  unter Settings → Secrets → Actions hinterlegt sind; FP_KEY_ALIAS wird nicht mehr gebraucht)
 on:
   push:
     branches: [main]
@@ -64,17 +64,24 @@ jobs:
         if: env.HAS_UPLOAD_KEY == 'true'
         env:
           FP_UPLOAD_KEYSTORE_BASE64: ${{ secrets.FP_UPLOAD_KEYSTORE_BASE64 }}
-        run: echo "$FP_UPLOAD_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload-keystore.jks"
+        run: printf '%s' "$FP_UPLOAD_KEYSTORE_BASE64" | tr -d ' \r\n' | base64 -d > "$RUNNER_TEMP/upload-keystore.jks"
 
       - name: App-Bundle für den Play Store bauen (signiert)
         if: env.HAS_UPLOAD_KEY == 'true'
         working-directory: android
         env:
           FP_KEYSTORE_PATH: ${{ runner.temp }}/upload-keystore.jks
-          FP_KEYSTORE_PASSWORD: ${{ secrets.FP_KEYSTORE_PASSWORD }}
-          FP_KEY_ALIAS: ${{ secrets.FP_KEY_ALIAS }}
-          FP_KEY_PASSWORD: ${{ secrets.FP_KEY_PASSWORD }}
-        run: ./gradlew bundleRelease --no-daemon
+          RAW_STORE_PW: ${{ secrets.FP_KEYSTORE_PASSWORD }}
+        run: |
+          # Werte bereinigen (Leerzeichen, Zeilenumbrüche, versehentlich mitkopiertes «Wert:»)
+          clean() { printf '%s' "$1" | tr -d '\r\n' | sed -e 's/^ *Wert: *//' -e 's/^ *//' -e 's/ *$//'; }
+          export FP_KEYSTORE_PASSWORD="$(clean "$RAW_STORE_PW")"
+          # PKCS12-Schlüsseldatei: Schlüssel-Passwort = Datei-Passwort
+          export FP_KEY_PASSWORD="$FP_KEYSTORE_PASSWORD"
+          # Name des Schlüssels in der Schlüsseldatei (kein Geheimnis)
+          export FP_KEY_ALIAS="fahrtenplan-upload"
+          echo "Schlüssel in der Datei:"; keytool -list -keystore "$FP_KEYSTORE_PATH" -storepass "$FP_KEYSTORE_PASSWORD" | grep -i "entry" || true
+          ./gradlew bundleRelease --no-daemon
 
       - name: App-Bundle bereitstellen
         if: env.HAS_UPLOAD_KEY == 'true'
@@ -90,4 +97,3 @@ jobs:
       - name: Schlüssel-Datei entfernen
         if: always()
         run: rm -f "$RUNNER_TEMP/upload-keystore.jks"
-        
