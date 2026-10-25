@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="fp_disclosure_title">Partajarea locației în timpul lucrului</string>
+    <string name="fp_disclosure_text">Fahrtenplan înregistrează locația vehiculului tău cât timp ești conectat ca șofer – și atunci când aplicația este închisă sau nu este folosită (în fundal).\n\nDispeceratul angajatorului tău vede astfel unde se află vehiculul, poate comunica clienților ora estimată de sosire și documentează traseele parcurse. Înregistrarea se oprește când te deconectezi. Cât timp locația este transmisă, este afișată o notificare.\n\nLa pasul următor permite accesul la locație și apoi alege „Permite întotdeauna”.</string>
+    <string name="fp_disclosure_ok">Sunt de acord</string>
+    <string name="fp_disclosure_no">Nu acum</string>
+    <string name="fp_battery_title">Dezactivează optimizarea bateriei</string>
+    <string name="fp_battery_text">Pentru ca locația să fie transmisă în mod fiabil și cu ecranul blocat: în setările aplicației deschide „Baterie” și alege „Nerestricționat” (sau „Nu optimiza”).</string>
+    <string name="fp_battery_open">Deschide setările</string>
+    <string name="fp_later">Mai târziu</string>
+</resources>

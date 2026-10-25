@@ -2,6 +2,14 @@
 <resources>
     <string name="app_name">Fahrtenplan</string>
     <string name="title_activity_main">Fahrtenplan</string>
-    <string name="package_name">online.sscbusiness.fahrtenplan</string>
-    <string name="custom_url_scheme">online.sscbusiness.fahrtenplan</string>
+    <string name="package_name">com.sscbusiness.fahrtenplan</string>
+    <string name="custom_url_scheme">com.sscbusiness.fahrtenplan</string>
+    <string name="fp_disclosure_title">Location sharing during work</string>
+    <string name="fp_disclosure_text">Fahrtenplan collects the location of your vehicle while you are logged in as a driver – also when the app is closed or not in use (in the background).\n\nYour employer\'s dispatch uses it to see where the vehicle is, to tell customers the expected arrival time and to document the routes driven. Location sharing stops when you log out. A notification is shown whenever the location is being transmitted.\n\nOn the next screen, please allow location access and then choose «Allow all the time».</string>
+    <string name="fp_disclosure_ok">Agree</string>
+    <string name="fp_disclosure_no">Not now</string>
+    <string name="fp_battery_title">Turn off battery optimisation</string>
+    <string name="fp_battery_text">So that your location is transmitted reliably even with the screen locked: in the app settings, open «Battery» and choose «Unrestricted» (or «Don\'t optimise»).</string>
+    <string name="fp_battery_open">Open settings</string>
+    <string name="fp_later">Later</string>
 </resources>

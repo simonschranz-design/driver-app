@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="fp_disclosure_title">Partage de la position pendant le travail</string>
+    <string name="fp_disclosure_text">Fahrtenplan enregistre la position de votre véhicule tant que vous êtes connecté en tant que chauffeur – même lorsque l\'application est fermée ou n\'est pas utilisée (en arrière-plan).\n\nLe service de planification de votre employeur l\'utilise pour savoir où se trouve le véhicule, communiquer aux clients l\'heure d\'arrivée prévue et documenter les trajets effectués. L\'enregistrement s\'arrête lorsque vous vous déconnectez. Une notification est affichée tant que la position est transmise.\n\nÀ l\'étape suivante, autorisez l\'accès à la position puis choisissez « Toujours autoriser ».</string>
+    <string name="fp_disclosure_ok">Accepter</string>
+    <string name="fp_disclosure_no">Pas maintenant</string>
+    <string name="fp_battery_title">Désactiver l\'optimisation de la batterie</string>
+    <string name="fp_battery_text">Pour que la position soit transmise de manière fiable même écran verrouillé : dans les paramètres de l\'application, ouvrez « Batterie » et choisissez « Non restreinte » (ou « Ne pas optimiser »).</string>
+    <string name="fp_battery_open">Ouvrir les paramètres</string>
+    <string name="fp_later">Plus tard</string>
+</resources>

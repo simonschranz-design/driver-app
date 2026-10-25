@@ -1,39 +1,64 @@
 apply plugin: 'com.android.application'
 
+// Versionsnummer für den Play Store: muss bei jedem Upload grösser werden.
+// Auf GitHub automatisch aus der Lauf-Nummer (1000 + Lauf), lokal 10.
+def ciRun = System.getenv("GITHUB_RUN_NUMBER")
+def fpVersionCode = ciRun ? 1000 + ciRun.toInteger() : 10
+
+// Signatur für den Play Store (Upload-Schlüssel). Kommt aus den GitHub-Secrets (siehe .github/workflows/build-android.yml);
+// der Schlüssel selbst liegt NIE im Repository.
+def releaseKeystore = System.getenv("FP_KEYSTORE_PATH")
+
 android {
-    namespace "online.sscbusiness.fahrtenplan"
-    compileSdk rootProject.ext.compileSdkVersion
+    // Java-Paket der eigenen Klassen (bleibt), die App-ID im Store ist applicationId
+    namespace = "online.sscbusiness.fahrtenplan"
+    compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "online.sscbusiness.fahrtenplan"
+        applicationId "com.sscbusiness.fahrtenplan"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "3.0"
+        versionCode fpVersionCode
+        versionName "4.0"
+        manifestPlaceholders = [appLabel: "Fahrtenplan"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
-            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
-    // APK-Dateiname: fahrtenplanV<Hauptversion>.apk (z. B. fahrtenplanV3.apk bei versionName "3.0")
+    // APK-Dateiname: fahrtenplanV<Hauptversion>.apk (z. B. fahrtenplanV4.apk bei versionName "4.0")
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "fahrtenplanV" + variant.versionName.tokenize('.')[0] + ".apk"
+            outputFileName = "fahrtenplanV" + variant.versionName.tokenize('.')[0] + (variant.buildType.name == "debug" ? "-test" : "") + ".apk"
         }
     }
-    // Feste Debug-Signatur (liegt im Repository): Ohne sie bekommt jeder GitHub-Build eine NEUE zufällige
-    // Signatur, und Android verweigert dann das Update über die installierte App ("App nicht installiert").
     signingConfigs {
+        // Feste Debug-Signatur (liegt im Repository): Ohne sie bekommt jeder GitHub-Build eine NEUE zufällige
+        // Signatur, und Android verweigert dann das Update über die installierte Test-App.
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (releaseKeystore) {
+                storeFile file(releaseKeystore)
+                storePassword System.getenv("FP_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("FP_KEY_ALIAS")
+                keyPassword System.getenv("FP_KEY_PASSWORD")
+            }
+        }
     }
     buildTypes {
+        debug {
+            // Test-App zum direkten Installieren: eigene ID und eigener Name, damit sie neben der Play-Store-App laufen kann
+            applicationIdSuffix ".test"
+            manifestPlaceholders = [appLabel: "Fahrtenplan Test"]
+        }
         release {
+            if (releaseKeystore) signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -52,7 +77,8 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
-    implementation 'com.google.android.gms:play-services-location:21.3.0' 
+    // Standort über Google Play-Dienste (TrackService)
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"

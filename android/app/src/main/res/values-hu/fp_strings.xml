@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="fp_disclosure_title">Helymegosztás munka közben</string>
+    <string name="fp_disclosure_text">A Fahrtenplan rögzíti a járműved helyzetét, amíg sofőrként be vagy jelentkezve – akkor is, ha az alkalmazás be van zárva vagy nincs használatban (a háttérben).\n\nA munkáltatód diszpécserei így látják, hol van a jármű, közölhetik az ügyfelekkel a várható érkezési időt, és dokumentálják a megtett útvonalakat. Kijelentkezéskor a rögzítés leáll. Amíg a helyzet továbbítása folyik, értesítés látható.\n\nA következő lépésben engedélyezd a helyhozzáférést, majd válaszd az „Engedélyezés mindig” lehetőséget.</string>
+    <string name="fp_disclosure_ok">Elfogadom</string>
+    <string name="fp_disclosure_no">Most nem</string>
+    <string name="fp_battery_title">Akkumulátor-optimalizálás kikapcsolása</string>
+    <string name="fp_battery_text">Hogy a helyzet zárolt képernyőnél is megbízhatóan továbbítódjon: az alkalmazás beállításaiban nyisd meg az „Akkumulátor” részt, és válaszd a „Korlátlan” (vagy „Nincs optimalizálva”) lehetőséget.</string>
+    <string name="fp_battery_open">Beállítások megnyitása</string>
+    <string name="fp_later">Később</string>
+</resources>

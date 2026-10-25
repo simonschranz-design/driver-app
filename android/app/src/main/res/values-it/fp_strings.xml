@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="fp_disclosure_title">Condivisione della posizione durante il lavoro</string>
+    <string name="fp_disclosure_text">Fahrtenplan rileva la posizione del tuo veicolo finché sei connesso come autista – anche quando l\'app è chiusa o non in uso (in background).\n\nLa disposizione del tuo datore di lavoro la utilizza per sapere dove si trova il veicolo, comunicare ai clienti l\'orario di arrivo previsto e documentare i percorsi effettuati. La rilevazione termina quando ti disconnetti. Finché la posizione viene trasmessa è visibile una notifica.\n\nNel passaggio successivo consenti l\'accesso alla posizione e poi scegli «Consenti sempre».</string>
+    <string name="fp_disclosure_ok">Accetto</string>
+    <string name="fp_disclosure_no">Non ora</string>
+    <string name="fp_battery_title">Disattivare l\'ottimizzazione della batteria</string>
+    <string name="fp_battery_text">Affinché la posizione venga trasmessa in modo affidabile anche a schermo bloccato: nelle impostazioni dell\'app apri «Batteria» e scegli «Senza limitazioni» (o «Non ottimizzare»).</string>
+    <string name="fp_battery_open">Apri impostazioni</string>
+    <string name="fp_later">Più tardi</string>
+</resources>

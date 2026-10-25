@@ -1,5 +1,5 @@
 {
-  "appId": "online.sscbusiness.fahrtenplan",
+  "appId": "com.sscbusiness.fahrtenplan",
   "appName": "Fahrtenplan",
   "webDir": "www",
   "server": {
@@ -14,5 +14,11 @@
   },
   "android": {
     "allowMixedContent": false
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "css",
+      "initialViewportFitValueHint": "cover"
+    }
   }
 }

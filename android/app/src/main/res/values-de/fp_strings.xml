@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="fp_disclosure_title">Standortfreigabe während der Arbeit</string>
+    <string name="fp_disclosure_text">Fahrtenplan erfasst den Standort deines Fahrzeugs, solange du als Fahrer angemeldet bist – auch wenn die App geschlossen ist oder nicht verwendet wird (im Hintergrund).\n\nDie Disposition deines Arbeitgebers sieht damit, wo sich das Fahrzeug befindet, kann Kunden die voraussichtliche Ankunftszeit mitteilen und die gefahrenen Strecken dokumentieren. Beim Abmelden wird die Erfassung beendet. Solange der Standort übertragen wird, ist eine Benachrichtigung sichtbar.\n\nBitte im nächsten Schritt den Standort erlauben und danach «Immer zulassen» wählen.</string>
+    <string name="fp_disclosure_ok">Zustimmen</string>
+    <string name="fp_disclosure_no">Nicht jetzt</string>
+    <string name="fp_battery_title">Akku-Optimierung ausschalten</string>
+    <string name="fp_battery_text">Damit der Standort auch bei gesperrtem Bildschirm zuverlässig übertragen wird: In den App-Einstellungen «Akku» öffnen und «Uneingeschränkt» (bzw. «Nicht optimieren») wählen.</string>
+    <string name="fp_battery_open">Einstellungen öffnen</string>
+    <string name="fp_later">Später</string>
+</resources>

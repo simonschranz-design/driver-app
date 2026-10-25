@@ -1,19 +1,17 @@
 {
   "name": "fahrtenplan-app",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "private": true,
-  "description": "Native Android-Hülle für den Fahrtenplan (lädt die bestehende Web-App, ergänzt Hintergrund-GPS)",
+  "description": "Native Android-Hülle für den Fahrtenplan (lädt die Web-App vom Server, eigener Standort-Dienst NativeTrack, Dokumente öffnen DocOpener)",
   "scripts": {
     "sync": "cap sync android"
   },
   "dependencies": {
-    "@capacitor-community/background-geolocation": "^1.2.26",
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/app": "^7.0.0",
-    "@capacitor/core": "^7.0.0",
-    "@capacitor/geolocation": "^7.0.0"
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.0.0"
+    "@capacitor/cli": "8.5.3"
   }
 }

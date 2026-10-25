@@ -46,25 +46,10 @@ public class DocOpenerPlugin extends Plugin {
         call.resolve(ret);
     }
 
-    /** Öffnet den Android-Dialog «Akku-Optimierung für diese App ausschalten». */
+    /** Öffnet die App-Einstellungen (Akku → «Uneingeschränkt») – ohne die eingeschränkte Berechtigung REQUEST_IGNORE_BATTERY_OPTIMIZATIONS. */
     @PluginMethod
     public void requestBatteryExemption(PluginCall call) {
-        try {
-            Intent i = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            i.setData(Uri.parse("package:" + getContext().getPackageName()));
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getContext().startActivity(i);
-            call.resolve();
-        } catch (Exception e) {
-            try {
-                Intent i2 = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-                i2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getContext().startActivity(i2);
-                call.resolve();
-            } catch (Exception e2) {
-                call.reject("Nicht möglich: " + e2.getMessage());
-            }
-        }
+        if (FpDialogs.openAppSettings(getContext())) call.resolve(); else call.reject("Einstellungen konnten nicht geöffnet werden.");
     }
 
     @PluginMethod

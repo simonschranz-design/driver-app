@@ -1,3 +1,5 @@
+> **Neu (Version 4.0): Für den Google Play Store siehe [ANLEITUNG-PLAYSTORE.md](ANLEITUNG-PLAYSTORE.md).** Die Test-APK heisst jetzt «Fahrtenplan Test» (`fahrtenplanV4-test.apk`, Download «Fahrtenplan-Test-APK»).
+
 # Fahrtenplan als native Android-App
 
 Dieses Paket baut automatisch (über GitHub) eine installierbare

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="fp_disclosure_title">Udostępnianie lokalizacji podczas pracy</string>
+    <string name="fp_disclosure_text">Fahrtenplan rejestruje lokalizację Twojego pojazdu, dopóki jesteś zalogowany jako kierowca – także wtedy, gdy aplikacja jest zamknięta lub nieużywana (w tle).\n\nDyspozytornia Twojego pracodawcy widzi dzięki temu, gdzie znajduje się pojazd, może przekazać klientom przewidywany czas przyjazdu i dokumentuje przejechane trasy. Po wylogowaniu rejestrowanie zostaje zakończone. Podczas przesyłania lokalizacji widoczne jest powiadomienie.\n\nW następnym kroku zezwól na dostęp do lokalizacji, a następnie wybierz „Zezwalaj zawsze”.</string>
+    <string name="fp_disclosure_ok">Zgadzam się</string>
+    <string name="fp_disclosure_no">Nie teraz</string>
+    <string name="fp_battery_title">Wyłącz optymalizację baterii</string>
+    <string name="fp_battery_text">Aby lokalizacja była przesyłana niezawodnie także przy zablokowanym ekranie: w ustawieniach aplikacji otwórz „Bateria” i wybierz „Bez ograniczeń” (lub „Nie optymalizuj”).</string>
+    <string name="fp_battery_open">Otwórz ustawienia</string>
+    <string name="fp_later">Później</string>
+</resources>

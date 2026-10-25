@@ -57,6 +57,18 @@ public class NativeTrackPlugin extends Plugin {
 
     private void stepPermissions(PluginCall call) {
         if (getPermissionState("location") != com.getcapacitor.PermissionState.GRANTED) {
+            // Google Play: vor der Android-Abfrage erklären, wozu der Standort (auch im Hintergrund) gebraucht wird
+            if (!TrackStore.sp(getContext()).getBoolean("disclosureOk", false)) {
+                FpDialogs.locationDisclosure(getActivity(), ok -> {
+                    if (ok) {
+                        TrackStore.sp(getContext()).edit().putBoolean("disclosureOk", true).apply();
+                        requestPermissionForAlias("location", call, "permStep");
+                    } else {
+                        finishStart(call); // ohne Standort: der Dienst meldet «Berechtigung fehlt», beim nächsten Start wird erneut gefragt
+                    }
+                });
+                return;
+            }
             requestPermissionForAlias("location", call, "permStep");
             return;
         }
@@ -84,12 +96,12 @@ public class NativeTrackPlugin extends Plugin {
         Context c = getContext();
         TrackService.startSafely(c, false);
         TrackReceiver.scheduleWatchdog(c);
-        // Akku-Ausnahme beim ersten Start automatisch erfragen (höchstens zweimal, damit es nicht nervt)
+        // Akku-Hinweis beim ersten Start (höchstens zweimal, damit es nicht nervt) – nur wenn der Standort erlaubt ist
         boolean ign = batteryIgnoring();
         int asked = TrackStore.sp(c).getInt("battAsked", 0);
-        if (!ign && asked < 2) {
+        if (!ign && asked < 2 && TrackService.hasFine(c)) {
             TrackStore.sp(c).edit().putInt("battAsked", asked + 1).apply();
-            openBatteryDialog();
+            FpDialogs.batteryHint(getActivity());
         }
         call.resolve(statusObj());
     }
@@ -158,25 +170,10 @@ public class NativeTrackPlugin extends Plugin {
         return pm != null && pm.isIgnoringBatteryOptimizations(getContext().getPackageName());
     }
 
-    private void openBatteryDialog() {
-        try {
-            Intent i = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-            i.setData(Uri.parse("package:" + getContext().getPackageName()));
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getContext().startActivity(i);
-        } catch (Exception e) {
-            try {
-                Intent i2 = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-                i2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getContext().startActivity(i2);
-            } catch (Exception ignored) {}
-        }
-    }
-
+    /** Früher: direkte Akku-Ausnahme (eingeschränkte Berechtigung). Jetzt: App-Einstellungen öffnen (Akku → «Uneingeschränkt»). */
     @PluginMethod
     public void requestBatteryExemption(PluginCall call) {
-        openBatteryDialog();
-        call.resolve();
+        if (FpDialogs.openAppSettings(getContext())) call.resolve(); else call.reject("Einstellungen konnten nicht geöffnet werden.");
     }
 
     /** Hersteller/Modell – die Webseite zeigt damit den Hinweis «Nie schlafende Apps» für Samsung/Xiaomi u. a. */
