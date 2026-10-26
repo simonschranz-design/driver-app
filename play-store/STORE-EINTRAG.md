@@ -82,7 +82,7 @@ Note: the app only works with an account your employer has set up for you in Fah
 | Frage | Antwort |
 |---|---|
 | Datenschutzerklärung | `https://ssc-business.com/datenschutz` |
-| App-Zugriff | «Alle oder einige Funktionen sind eingeschränkt» → Anmeldedaten des **Testzugangs** eintragen (siehe Anleitung, Schritt 5) |
+| App-Zugriff | «Alle oder einige Funktionen sind eingeschränkt» → neue Anleitung: Name «Demo-Fahrer», Benutzername `demo.fahrer`, Passwort (aus `tenant demo`), bei «Weitere Informationen» den Text unten einfügen |
 | Werbung | Nein, die App enthält keine Werbung |
 | Einstufung des Inhalts | Fragebogen: Kategorie «Dienstprogramm/Produktivität», alle Fragen zu Gewalt, Sex, Glücksspiel usw. mit **Nein** → Ergebnis «Alle/ab 3» |
 | Zielgruppe | **18 und älter** (nur «18+» ankreuzen) |
@@ -91,6 +91,14 @@ Note: the app only works with an account your employer has set up for you in Fah
 | Finanzfunktionen | Keine |
 | Gesundheit | Keine Gesundheitsfunktionen |
 | Werbe-ID | **Nein**, die App verwendet keine Werbe-ID |
+
+**Text für «Weitere Informationen» beim App-Zugriff** (Englisch, für die Prüfer):
+```
+1. Start the app. On the first screen enter the company code: demo  → tap "Continue".
+2. Log in with the username and password above (demo driver account of a fictitious test company, no real data).
+3. Before the jobs are shown, the app asks for the vehicle check ("Rundum-Kontrolle"): tick all items as OK and send.
+4. The app then shows today's jobs. Location: the app explains location use first ("Agree"), then Android asks for the permission.
+```
 
 ### Datensicherheit (Data safety)
 

@@ -1,1 +1,96 @@
-<!doctype html><html><body>Wird nicht verwendet – App lädt die Live-Seite (siehe capacitor.config.json).</body></html>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fahrtenplan</title>
+<style>
+  :root{--bg:#073b6b;--card:#ffffff;--ink:#141413;--muted:#5b5b57;--line:#d8dde5;--accent:#0a7cff;--err:#b42318}
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,Roboto,"Segoe UI",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;
+       padding:calc(1.2rem + env(safe-area-inset-top,0px)) 1rem calc(1.2rem + env(safe-area-inset-bottom,0px))}
+  .logo{width:84px;height:84px;border-radius:20px;background:#0b4d8a;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:1rem;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .logo b{color:#eef5fc;font:800 44px/1 -apple-system,Roboto,sans-serif}
+  .logo i{display:block;width:46px;height:6px;border-radius:3px;background:var(--accent);margin-top:6px}
+  .card{background:var(--card);border-radius:16px;padding:1.4rem 1.2rem;width:100%;max-width:24rem;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  h1{font-size:1.35rem;margin:0 0 .3rem}
+  p{margin:.3rem 0 1rem;color:var(--muted);font-size:.95rem}
+  label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.35rem}
+  input{width:100%;font-size:1.15rem;padding:.8rem .9rem;border:1.5px solid var(--line);border-radius:10px;outline:none;text-transform:lowercase}
+  input:focus{border-color:var(--accent)}
+  button{width:100%;margin-top:.9rem;font-size:1.05rem;font-weight:700;padding:.85rem;border:0;border-radius:10px;background:var(--accent);color:#fff}
+  button[disabled]{opacity:.6}
+  .err{color:var(--err);font-size:.9rem;min-height:1.2em;margin-top:.6rem}
+  .langs{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center}
+  .langs a{color:#cfe0f3;font-size:.8rem;text-decoration:none;padding:.2rem .45rem;border-radius:6px;border:1px solid rgba(255,255,255,.25)}
+  .langs a.on{background:rgba(255,255,255,.18);color:#fff}
+  .foot{margin-top:.8rem;color:#9fbbd9;font-size:.75rem;text-align:center}
+  .foot a{color:#cfe0f3}
+</style>
+</head>
+<body>
+  <div class="logo"><b>F</b><i></i></div>
+  <div class="card">
+    <h1 id="t_title">Willkommen</h1>
+    <p id="t_intro">Gib den Firmen-Code ein, den du von deiner Disposition erhalten hast.</p>
+    <label for="code" id="t_label">Firmen-Code</label>
+    <input id="code" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="text" enterkeyhint="go" placeholder="z. B. muster">
+    <button id="go" type="button">Weiter</button>
+    <div class="err" id="err" role="alert"></div>
+  </div>
+  <div class="langs" id="langs"></div>
+  <div class="foot"><a href="https://ssc-business.com/datenschutz" id="t_privacy">Datenschutz</a></div>
+<script>
+(function(){
+  var DIRECTORY = 'https://ssc-business.com/app-mandant?code=';
+  var T = {
+    de:{title:'Willkommen', intro:'Gib den Firmen-Code ein, den du von deiner Disposition erhalten hast.', label:'Firmen-Code', go:'Weiter', ph:'z. B. muster', empty:'Bitte den Firmen-Code eingeben.', notfound:'Firma nicht gefunden. Bitte den Code bei der Disposition erfragen.', offline:'Keine Verbindung zum Server. Bitte Internet prüfen und nochmals versuchen.', wait:'Bitte warten …', privacy:'Datenschutz'},
+    en:{title:'Welcome', intro:'Enter the company code you received from your dispatch.', label:'Company code', go:'Continue', ph:'e.g. sample', empty:'Please enter the company code.', notfound:'Company not found. Please ask your dispatch for the code.', offline:'No connection to the server. Please check your internet and try again.', wait:'Please wait …', privacy:'Privacy'},
+    fr:{title:'Bienvenue', intro:'Saisissez le code entreprise reçu de votre service de planification.', label:'Code entreprise', go:'Continuer', ph:'p. ex. exemple', empty:'Veuillez saisir le code entreprise.', notfound:'Entreprise introuvable. Demandez le code à votre planification.', offline:'Pas de connexion au serveur. Vérifiez Internet et réessayez.', wait:'Veuillez patienter …', privacy:'Confidentialité'},
+    it:{title:'Benvenuto', intro:'Inserisci il codice aziendale ricevuto dalla tua disposizione.', label:'Codice aziendale', go:'Avanti', ph:'es. esempio', empty:'Inserisci il codice aziendale.', notfound:'Azienda non trovata. Chiedi il codice alla disposizione.', offline:'Nessuna connessione al server. Controlla Internet e riprova.', wait:'Attendere …', privacy:'Privacy'},
+    pl:{title:'Witaj', intro:'Wpisz kod firmy otrzymany od dyspozytora.', label:'Kod firmy', go:'Dalej', ph:'np. przyklad', empty:'Wpisz kod firmy.', notfound:'Nie znaleziono firmy. Zapytaj dyspozytora o kod.', offline:'Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.', wait:'Proszę czekać …', privacy:'Prywatność'},
+    ro:{title:'Bun venit', intro:'Introdu codul firmei primit de la dispecerat.', label:'Codul firmei', go:'Continuă', ph:'ex. exemplu', empty:'Introdu codul firmei.', notfound:'Firma nu a fost găsită. Cere codul de la dispecerat.', offline:'Nu există conexiune la server. Verifică internetul și încearcă din nou.', wait:'Te rog așteaptă …', privacy:'Confidențialitate'},
+    hu:{title:'Üdvözlünk', intro:'Add meg a diszpécsertől kapott cégkódot.', label:'Cégkód', go:'Tovább', ph:'pl. minta', empty:'Add meg a cégkódot.', notfound:'A cég nem található. Kérd el a kódot a diszpécsertől.', offline:'Nincs kapcsolat a szerverrel. Ellenőrizd az internetet, és próbáld újra.', wait:'Kérlek, várj …', privacy:'Adatvédelem'}
+  };
+  var NAMES = {de:'Deutsch', en:'English', fr:'Français', it:'Italiano', pl:'Polski', ro:'Română', hu:'Magyar'};
+  var lang = (navigator.language||'de').slice(0,2).toLowerCase(); if(!T[lang]) lang = 'en';
+  try{ var sl = localStorage.getItem('fp_lang'); if(sl && T[sl]) lang = sl; }catch(e){}
+  var $ = function(id){ return document.getElementById(id); };
+  function apply(){
+    var t = T[lang]; document.documentElement.lang = lang;
+    $('t_title').textContent = t.title; $('t_intro').textContent = t.intro; $('t_label').textContent = t.label;
+    $('go').textContent = t.go; $('code').placeholder = t.ph; $('t_privacy').textContent = t.privacy; $('err').textContent = '';
+    $('langs').innerHTML = Object.keys(NAMES).map(function(k){ return '<a href="#" data-l="'+k+'"'+(k===lang?' class="on"':'')+'>'+NAMES[k]+'</a>'; }).join('');
+  }
+  $('langs').addEventListener('click', function(e){ var a = e.target.closest('[data-l]'); if(!a) return; e.preventDefault(); lang = a.dataset.l; try{ localStorage.setItem('fp_lang', lang); }catch(_){} apply(); });
+  function plugin(){ return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FpTenant; }
+  function fail(msg){ $('err').textContent = msg; $('go').disabled = false; $('go').textContent = T[lang].go; }
+  async function go(){
+    var raw = $('code').value.trim().toLowerCase();
+    if(!raw){ fail(T[lang].empty); return; }
+    $('go').disabled = true; $('go').textContent = T[lang].wait; $('err').textContent = '';
+    var url = '', name = '', code = '';
+    if(raw.indexOf('.') > 0){
+      // Eigene Domain eingegeben (z. B. dispo.firma.ch)
+      var host = raw.replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+      url = 'https://' + host + '/index.php'; name = host;
+    }else{
+      try{
+        var res = await fetch(DIRECTORY + encodeURIComponent(raw), {cache:'no-store'});
+        var j = await res.json().catch(function(){ return null; });
+        if(!res.ok || !j || !j.ok){ fail(res.status===404 ? T[lang].notfound : ((j && j.message) || T[lang].notfound)); return; }
+        url = j.url; name = j.name || ''; code = raw;
+      }catch(e){ fail(T[lang].offline); return; }
+    }
+    var P = plugin();
+    if(P){ try{ await P.choose({url:url, name:name, code:code}); }catch(e){ fail((e && e.message) || T[lang].offline); } }
+    else location.href = url;   // im normalen Browser (Test)
+  }
+  $('go').addEventListener('click', go);
+  $('code').addEventListener('keydown', function(e){ if(e.key==='Enter') go(); });
+  apply();
+})();
+</script>
+</body>
+</html>

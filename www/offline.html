@@ -19,11 +19,15 @@
   <p>Die App versucht es automatisch erneut, sobald Empfang da ist.</p>
   <div class="spin" id="spin"></div>
   <button id="retry">Jetzt erneut versuchen</button>
+  <p style="margin-top:1rem"><a href="#" id="switch" style="color:#073b6b;font-size:.9rem">Andere Firma wählen</a></p>
   <small id="diag"></small>
 </div>
 <script>
 (function(){
   var TARGET = 'https://ssc-business.com/index.php';
+  // gewählte Firma (Mandant) aus der App holen
+  try{ var P = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FpTenant;
+    if(P) P.current().then(function(c){ if(c && c.url) TARGET = c.url; }).catch(function(){}); }catch(e){}
   var tries = 0, busy = false;
   function diag(msg){ document.getElementById('diag').textContent = msg; }
   function go(){ location.replace(TARGET); }
@@ -36,6 +40,7 @@
             function(e){ clearTimeout(t); busy = false; diag('Versuch '+tries+' · '+(navigator.onLine===false?'Gerät meldet: offline':'Server antwortet nicht')+' ('+(e&&e.name||'Fehler')+')'); });
   }
   document.getElementById('retry').addEventListener('click', function(){ go(); });
+  document.getElementById('switch').addEventListener('click', function(e){ e.preventDefault(); try{ window.Capacitor.Plugins.FpTenant.reset(); }catch(_){} });
   window.addEventListener('online', check);
   document.addEventListener('visibilitychange', function(){ if(!document.hidden) check(); });
   setInterval(check, 5000); check();
